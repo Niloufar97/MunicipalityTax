@@ -15,6 +15,8 @@ namespace MunicipalityTax.Controllers
         {
             _context = context;
         }
+        //get tax rate for a specific municipality and date
+        //the shorter date range has higher priority
         [HttpGet]
         public async Task<IActionResult> GetTaxRate([FromQuery] string municipality, [FromQuery] DateOnly date)
         {
@@ -32,7 +34,7 @@ namespace MunicipalityTax.Controllers
             var taxWithHighPriority = taxes.OrderBy(t => (t.endDate.DayNumber - t.startDate.DayNumber)).First(); //shorter period has higher priority
             return Ok(taxWithHighPriority.taxRate);
         }
-
+        //add a new tax record
         [HttpPost("add")]
         public async Task<IActionResult> AddTax([FromBody] AddTaxRequestDto request)
         {
