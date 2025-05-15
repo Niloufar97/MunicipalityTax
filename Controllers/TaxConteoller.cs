@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using MunicipalityTax.Data;
 using MunicipalityTax.Dtos;
+using MunicipalityTax.Models;
+
 namespace MunicipalityTax.Controllers
 {
     [ApiController]
@@ -13,14 +15,14 @@ namespace MunicipalityTax.Controllers
         {
             _context = context;
         }
-        [HttpPost]
-        public async Task<IActionResult> GetTaxRate([FromBody] TaxRequestDto request)
+        [HttpGet]
+        public async Task<IActionResult> GetTaxRate([FromQuery] string municipality, [FromQuery] DateOnly date)
         {
             var taxes = await _context.Taxes
                                       .Include(t=> t.Municipality)
-                                      .Where(t => t.Municipality.MunicipalityName == request.Municipality
-                                                  && t.startDate <= request.Date
-                                                  && t.endDate >= request.Date)                              
+                                      .Where(t => t.Municipality.MunicipalityName == municipality
+                                                  && t.startDate <= date
+                                                  && t.endDate >= date)                              
                                       .ToListAsync();
             if (!taxes.Any())
             {
@@ -30,5 +32,24 @@ namespace MunicipalityTax.Controllers
             var taxWithHighPriority = taxes.OrderBy(t => (t.endDate.DayNumber - t.startDate.DayNumber)).First(); //shorter period has higher priority
             return Ok(taxWithHighPriority.taxRate);
         }
-    }
+
+        [HttpPost("add")]
+        public async Task<IActionResult> AddTax([FromBody] AddTaxRequestDto request)
+        {
+            var newTaxRecord = new Tax
+            {
+                startDate = request.startDate,
+                endDate = request.endDate,
+                taxRate = request.taxRate,
+                MunicipalityId = request.MunicipalityId,
+            };
+            _context.Taxes.Add(newTaxRecord);
+            _context.SaveChanges();
+
+            return CreatedAtAction(nameof(GetTaxRate), new { municipality = request.MunicipalityId, date = request.startDate }, newTaxRecord);
+        }
+    };
+
+   
+
 }
