@@ -29,7 +29,14 @@ namespace MunicipalityTax.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> AddMunicipality([FromBody] Municipality municipality) //it is better to add a Dto for request
         {
-           
+           if(string.IsNullOrEmpty(municipality.MunicipalityName))
+            {
+                return BadRequest("Municipality name is required");
+            }
+            if (await _context.Municipalities.AnyAsync(m => m.MunicipalityName == municipality.MunicipalityName))
+            {
+                return BadRequest("Municipality already exists");
+            }
             await _context.Municipalities.AddAsync(municipality);
             await _context.SaveChangesAsync();
 
