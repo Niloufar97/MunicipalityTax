@@ -1,6 +1,7 @@
 using MunicipalityTax.Data;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using MunicipalityTax.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ builder.Services.AddControllers();
 // The connection string is retrieved from the appsettings.json file under "ConnectionStrings:DefaultConnection"
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<ITaxService, TaxService>();
 
 var app = builder.Build();
 

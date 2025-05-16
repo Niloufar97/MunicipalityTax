@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MunicipalityTax.Data;
 using MunicipalityTax.Dtos;
-using MunicipalityTax.Models;
+using MunicipalityTax.Services;
 
 namespace MunicipalityTax.Controllers
 {
@@ -11,47 +10,42 @@ namespace MunicipalityTax.Controllers
     public class TaxController : ControllerBase
     {
         private readonly AppDbContext _context;
-        public TaxController(AppDbContext context)
+        private readonly ITaxService _taxService;
+        public TaxController(AppDbContext context, ITaxService taxService)
         {
             _context = context;
+            _taxService = taxService;
         }
         //get tax rate for a specific municipality and date
         //the shorter date range has higher priority
         [HttpGet]
         public async Task<IActionResult> GetTaxRate([FromQuery] string municipality, [FromQuery] DateOnly date)
         {
-            var taxes = await _context.Taxes
-                                      .Include(t=> t.Municipality)
-                                      .Where(t => t.Municipality.MunicipalityName == municipality
-                                                  && t.startDate <= date
-                                                  && t.endDate >= date)                              
-                                      .ToListAsync();
-            if (!taxes.Any())
+            try
             {
-                return NotFound("Tax rate not found for this inputs");
+                var taxRate = await _taxService.GetTaxRate(municipality, date);
+                return Ok(taxRate);
             }
-
-            var taxWithHighPriority = taxes.OrderBy(t => (t.endDate.DayNumber - t.startDate.DayNumber)).First(); //shorter period has higher priority
-            return Ok(taxWithHighPriority.taxRate);
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
+
         //add a new tax record
         [HttpPost("add")]
-        public async Task<IActionResult> AddTax([FromBody] AddTaxRequestDto request)
+        public async Task<IActionResult> AddTaxRecord([FromBody] AddTaxRequestDto request)
         {
-            var newTaxRecord = new Tax
+            try
             {
-                startDate = request.startDate,
-                endDate = request.endDate,
-                taxRate = request.taxRate,
-                MunicipalityId = request.MunicipalityId,
-            };
-            _context.Taxes.Add(newTaxRecord);
-            _context.SaveChanges();
+                await _taxService.AddTaxRecord(request);
+                return Created();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
 
-            return CreatedAtAction(nameof(GetTaxRate), new { municipality = request.MunicipalityId, date = request.startDate }, newTaxRecord);
+            }
         }
     };
-
-   
-
 }

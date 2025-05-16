@@ -2,10 +2,10 @@
 {
     public class AddTaxRequestDto
     {
-        public DateOnly startDate { get; set; }
-        public DateOnly endDate { get; set; }
-        public decimal taxRate { get; set; }
-        public int MunicipalityId { get; set; }
+        public required DateOnly startDate { get; set; }
+        public required DateOnly endDate { get; set; }
+        public required decimal taxRate { get; set; }
+        public required int MunicipalityId { get; set; }
 
     }
 }
