@@ -1,7 +1,7 @@
 # 🏛️ Tax Management Application
 
 ## 📝 Short Description
-This project is a small application to manage taxes in different municipalities by date and type.  
+This project is a small application to manage taxes in different municipalities by date.  
 I choose to implement it using **C#**. because C# is my preferred language and I feel more confident with it.
 
 ## 🧰 Technologies Used
