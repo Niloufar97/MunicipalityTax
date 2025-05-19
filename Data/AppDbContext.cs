@@ -8,7 +8,13 @@ namespace MunicipalityTax.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
+        /// <summary>
+        /// DbSet representing municipality table in my database.
+        /// </summary>
         public DbSet<Municipality> Municipalities { get; set; }
+        /// <summary>
+        /// DbSet representing taxes table in my database. contains all the tax rates.
+        /// </summary>
         public DbSet<Tax> Taxes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

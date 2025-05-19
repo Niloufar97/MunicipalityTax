@@ -16,8 +16,14 @@ namespace MunicipalityTax.Controllers
             _context = context;
             _taxService = taxService;
         }
-        //get tax rate for a specific municipality and date
-        //the shorter date range has higher priority
+        /// <summary>
+        /// get tax rate for a specific municipality and date
+        /// the shorter date range has higher priority
+        /// </summary>
+        /// <param name="municipality"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+   
         [HttpGet]
         public async Task<IActionResult> GetTaxRate([FromQuery] string municipality, [FromQuery] DateOnly date)
         {
@@ -31,8 +37,11 @@ namespace MunicipalityTax.Controllers
                 return NotFound(ex.Message);
             }
         }
-
-        //add a new tax record
+        /// <summary>
+        /// Add a new tax record to the database.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("add")]
         public async Task<IActionResult> AddTaxRecord([FromBody] AddTaxRequestDto request)
         {
