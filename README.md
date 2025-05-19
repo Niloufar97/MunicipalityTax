@@ -2,7 +2,7 @@
 
 ## 📝 Short Description
 This project is a small application to manage taxes in different municipalities by date and type.  
-I choose to implement it using **C#** instead of Java because C# is my preferred language and I feel more confident with it.
+I choose to implement it using **C#**. because C# is my preferred language and I feel more confident with it.
 
 ## 🧰 Technologies Used
 - **C#**
@@ -14,8 +14,9 @@ I choose to implement it using **C#** instead of Java because C# is my preferred
 - **Scalar** (for API documentation and testing)
   
 ## 💻 Application Type
-I decided to build a **Web API** application instead of a desktop or console app.  
-I chose Web API mostly because this task was about showing my skills, and I thought this way is a good example of how I usually build things.
+I decided to build a **Web API** application for this task.  
+I chose Web API mostly because this task was about showing my skills, and I thought this way is a good example of how I usually build things.  
+Also, Web APIs are a clean way to separate backend logic and make it easy to connect with different types of clients in the future, like web or mobile apps.ings.
 
 ## 🗄️ Database
 I didn’t ignore the database file — it is included in the project so reviewers can clone and test it easily. The database contains the tax records.
@@ -32,15 +33,12 @@ My main focus was on the Tax controller and making sure tax-related features wer
 I used **xUnit** for unit testing some parts of the application to make sure the logic works as expected.
 
 ## 🚀 How to Clone and Use
-- Clone the project using:  
-  `git clone <your-repo-url>`
+- Clone the project.
 - Open the solution in Visual Studio or your preferred IDE.
 - The data is **NOT** seeded automatically in the project, I added the data directly through the database.  
 - So, if you want to test the app, you can check the database for existing data or add your own.  
-- Run the Web API project and open **Scalar** UI (usually at `https://localhost:<port>/scalar`) to explore and test the endpoints.  
+- Run the Web API project and open **Scalar** UI to explore and test the endpoints.  
 - Or use any REST client (like Postman) to query the tax rates by municipality and date.
-
-If you want to know more about why I chose to add data this way or about my experience with databases, I will be happy to explain during an interview. 😊
 
 ---
 
