@@ -40,6 +40,13 @@ I used **xUnit** for unit testing some parts of the application to make sure the
 - Run the Web API project and open **Scalar** UI to explore and test the endpoints.  
 - Or use any REST client (like Postman) to query the tax rates by municipality and date.
 
+
+## 📸 API Screenshot
+
+Here’s a quick look at the API in action using Scalar:
+
+![Screenshot 2025-05-19 124748](https://github.com/user-attachments/assets/55542acb-deb3-4f7c-ab09-93282e47c379)
+
 ---
 
 Thank you for reviewing my project. 🙏
