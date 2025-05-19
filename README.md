@@ -2,7 +2,7 @@
 
 ## 📝 Short Description
 This project is a small application to manage taxes in different municipalities by date.  
-I choose to implement it using **C#**, because C# is my preferred language and I feel more confident with it.
+I choose to implement it using **C#**, because it is my preferred language and I feel more confident with it.
 
 ## 🧰 Technologies Used
 - **C#**
