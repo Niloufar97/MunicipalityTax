@@ -4,6 +4,15 @@
 This project is a small application to manage taxes in different municipalities by date and type.  
 I choose to implement it using **C#** instead of Java because C# is my preferred language and I feel more confident with it.
 
+## 🧰 Technologies Used
+- **C#**
+- **ASP.NET Core Web API**
+- **Entity Framework Core**
+- **SQLite**
+- **xUnit** (for unit testing)
+- **MVC pattern** (used in controller structure)
+- **Scalar** (for API documentation and testing)
+  
 ## 💻 Application Type
 I decided to build a **Web API** application instead of a desktop or console app.  
 I chose Web API mostly because this task was about showing my skills, and I thought this way is a good example of how I usually build things.
