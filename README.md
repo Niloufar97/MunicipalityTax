@@ -2,7 +2,7 @@
 
 ## 📝 Short Description
 This project is a small application to manage taxes in different municipalities by date.  
-I choose to implement it using **C#**. because C# is my preferred language and I feel more confident with it.
+I choose to implement it using **C#**, because C# is my preferred language and I feel more confident with it.
 
 ## 🧰 Technologies Used
 - **C#**
@@ -16,7 +16,7 @@ I choose to implement it using **C#**. because C# is my preferred language and I
 ## 💻 Application Type
 I decided to build a **Web API** application for this task.  
 I chose Web API mostly because this task was about showing my skills, and I thought this way is a good example of how I usually build things.  
-Also, Web APIs are a clean way to separate backend logic and make it easy to connect with different types of clients in the future, like web or mobile apps.ings.
+Also, Web APIs are a clean way to separate backend logic and make it easy to connect with different types of clients in the future, like web or mobile apps.
 
 ## 🗄️ Database
 I didn’t ignore the database file — it is included in the project so reviewers can clone and test it easily. The database contains the tax records.
