@@ -15,6 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<ITaxService, TaxService>();
+builder.Services.AddScoped<MunicipalityService>();
 
 var app = builder.Build();
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MunicipalityTax.Data;
 using MunicipalityTax.Dtos;
 using MunicipalityTax.Services;
 
@@ -9,11 +8,9 @@ namespace MunicipalityTax.Controllers
     [Route("api/[controller]")]
     public class TaxController : ControllerBase
     {
-        private readonly AppDbContext _context;
         private readonly ITaxService _taxService;
-        public TaxController(AppDbContext context, ITaxService taxService)
+        public TaxController(ITaxService taxService)
         {
-            _context = context;
             _taxService = taxService;
         }
         /// <summary>

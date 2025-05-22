@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MunicipalityTax.Data;
-using MunicipalityTax.Models;
+using MunicipalityTax.Dtos;
+using MunicipalityTax.Services;
 
 namespace MunicipalityTax.Controllers
 {
@@ -9,38 +8,41 @@ namespace MunicipalityTax.Controllers
     [Route("api/[controller]")]
     public class MunicipalityController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly MunicipalityService _municipalityService;
 
-        public MunicipalityController(AppDbContext context)
+        public MunicipalityController(MunicipalityService municipality)
         {
-            _context = context;
+            _municipalityService = municipality;
         }
 
         // Get all Municipality
         [HttpGet]
         public async Task<IActionResult> GetAllMunicipality()
         {
-            var municipalites = await _context.Municipalities
-                .Include(m => m.Taxes)
-                .ToListAsync();
-            return Ok(municipalites);
+            try
+            {
+                var municipaities = await _municipalityService.GetAllMunicipalitiesAsync();
+                return Ok(municipaities);
+            }
+            catch
+            {
+                return StatusCode(500 ,"An unexpected error occurred.");
+            }
+            
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddMunicipality([FromBody] Municipality municipality) //it is better to add a Dto for request
+        public async Task<IActionResult> AddMunicipality([FromBody] AddMunicipalityRequestDto municipality) 
         {
-           if(string.IsNullOrEmpty(municipality.MunicipalityName))
+            try
             {
-                return BadRequest("Municipality name is required");
+                await _municipalityService.AddMunicipalityAsync(municipality);
+                return Created();
             }
-            if (await _context.Municipalities.AnyAsync(m => m.MunicipalityName == municipality.MunicipalityName))
+            catch (Exception ex)
             {
-                return BadRequest("Municipality already exists");
+                return BadRequest(ex.Message);
             }
-            await _context.Municipalities.AddAsync(municipality);
-            await _context.SaveChangesAsync();
-
-            return Created();
         }
     }
 }
