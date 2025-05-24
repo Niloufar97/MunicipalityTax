@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MunicipalityTax.Data;
-using MunicipalityTax.Dtos;
+﻿using MunicipalityTax.Dtos;
 using MunicipalityTax.Models;
+using MunicipalityTax.Repositories;
 
 namespace MunicipalityTax.Services
 {
@@ -13,23 +12,20 @@ namespace MunicipalityTax.Services
     }
     public class TaxService : ITaxService
     {
-        // Inject AppDbContext via dependency injection
-        private readonly AppDbContext _context;
-        public TaxService(AppDbContext context)
+        // Inject taxRepository for database comunication via dependency injection
+        private readonly ITaxRepository _taxRepository;
+       
+
+        public TaxService(ITaxRepository taxRepository)
         {
-            _context = context;
+            _taxRepository = taxRepository;
         }
         /// <summary>
         /// Gets the applicable tax rate for a given municipality on a specific date.
         /// </summary>
         public async Task<decimal> GetTaxRate(string municipality, DateOnly date)
         {
-            var taxes = await _context.Taxes
-                                      .Include(t => t.Municipality)
-                                      .Where(t => t.Municipality.MunicipalityName == municipality
-                                                  && t.startDate <= date
-                                                  && t.endDate >= date)
-                                      .ToListAsync();
+            var taxes = await _taxRepository.AllTaxesWithInputs(municipality, date);
             if (!taxes.Any())
             {
                 throw new Exception("No tax records found for the specified municipality and date.");
@@ -44,7 +40,7 @@ namespace MunicipalityTax.Services
         public async Task AddTaxRecord(AddTaxRequestDto request)
         {
             // Check if the tax record exists
-            if (await TaxRecordExists(request))
+            if (await _taxRepository.TaxRecordExists(request))
             {
                 throw new Exception("Tax record already exists for the specified municipality and date range.");
             }
@@ -59,14 +55,9 @@ namespace MunicipalityTax.Services
                 taxRate = request.taxRate,
                 MunicipalityId = request.MunicipalityId,
             };
-            _context.Taxes.Add(newTaxRecord);
-            await _context.SaveChangesAsync();
+            await _taxRepository.AddTaxRecord(newTaxRecord);
         }
 
-        private async Task<bool> TaxRecordExists(AddTaxRequestDto request)
-        {
-            return await _context.Taxes.AnyAsync(t => t.MunicipalityId == request.MunicipalityId && t.startDate == request.startDate && t.endDate == request.endDate);
-        }
         // validate inputs for add a new tax record. can improved by returning more accureate error messages
         private async Task<bool> ValidateInputs(AddTaxRequestDto request)
         {
@@ -76,10 +67,9 @@ namespace MunicipalityTax.Services
             //Check tax rate
             if (request.taxRate > 1 || request.taxRate < 0)
                 return false;
-            if (!await _context.Municipalities.AnyAsync(m => m.Id == request.MunicipalityId))
+            if (!await _taxRepository.MunicipalityExists(request.MunicipalityId))
                 return false;
             return true;
         }
-
     }
 }

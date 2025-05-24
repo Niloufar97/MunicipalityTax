@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MunicipalityTax.Data;
 using MunicipalityTax.Models;
+using MunicipalityTax.Repositories;
 using MunicipalityTax.Services;
 using Xunit;
 
@@ -12,7 +13,9 @@ public class TaxServiceTests
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options;
         var context = new AppDbContext(options);
+
         context.Municipalities.Add(new Municipality { Id = 1, MunicipalityName = "TestCity" });
+
         context.Taxes.AddRange(
             new Tax
             {
@@ -47,76 +50,72 @@ public class TaxServiceTests
                 taxRate = 0.1m
             }
         );
+
         context.SaveChanges();
         return context;
+    }
+
+    private TaxService GetTaxService(AppDbContext context)
+    {
+        var repository = new TaxRepository(context);
+        return new TaxService(repository);
     }
 
     [Fact]
     public async Task GetTaxRate_Jan_ShouldReturn_0_1()
     {
-        // Arrange
         var context = GetDbContext();
-        var service = new TaxService(context);
+        var service = GetTaxService(context);
         var date = new DateOnly(2025, 1, 1);
 
-        // Act
         var rate = await service.GetTaxRate("TestCity", date);
 
-        // Assert
         Assert.Equal(0.1m, rate);
     }
+
     [Fact]
     public async Task GetTaxRate_Mar_ShouldReturn_0_2()
     {
-        // Arrange
         var context = GetDbContext();
-        var service = new TaxService(context);
+        var service = GetTaxService(context);
         var date = new DateOnly(2025, 3, 16);
 
-        // Act
         var rate = await service.GetTaxRate("TestCity", date);
 
-        // Assert
         Assert.Equal(0.2m, rate);
     }
+
     [Fact]
     public async Task GetTaxRate_May_ShouldReturn_0_4()
     {
-        // Arrange
         var context = GetDbContext();
-        var service = new TaxService(context);
+        var service = GetTaxService(context);
         var date = new DateOnly(2025, 5, 2);
 
-        // Act
         var rate = await service.GetTaxRate("TestCity", date);
 
-        // Assert
         Assert.Equal(0.4m, rate);
     }
+
     [Fact]
     public async Task GetTaxRate_Jul_ShouldReturn_0_2()
     {
-        // Arrange
         var context = GetDbContext();
-        var service = new TaxService(context);
+        var service = GetTaxService(context);
         var date = new DateOnly(2025, 7, 10);
 
-        // Act
         var rate = await service.GetTaxRate("TestCity", date);
 
-        // Assert
         Assert.Equal(0.2m, rate);
     }
 
     [Fact]
     public async Task GetTaxRate_ThrowsException_WhenNoTaxFound()
     {
-        // Arrange
         var context = GetDbContext();
-        var service = new TaxService(context);
+        var service = GetTaxService(context);
         var date = new DateOnly(2026, 1, 1);
 
-        // Act & Assert
         await Assert.ThrowsAsync<Exception>(() => service.GetTaxRate("TestCity", date));
     }
 }
