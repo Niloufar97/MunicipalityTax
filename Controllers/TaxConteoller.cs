@@ -20,19 +20,12 @@ namespace MunicipalityTax.Controllers
         /// <param name="municipality"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-   
+
         [HttpGet]
         public async Task<IActionResult> GetTaxRate([FromQuery] string municipality, [FromQuery] DateOnly date)
         {
-            try
-            {
-                var taxRate = await _taxService.GetTaxRate(municipality, date);
-                return Ok(taxRate);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            var taxRate = await _taxService.GetTaxRate(municipality, date);
+            return Ok(taxRate);
         }
         /// <summary>
         /// Add a new tax record to the database.
@@ -42,16 +35,8 @@ namespace MunicipalityTax.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> AddTaxRecord([FromBody] AddTaxRequestDto request)
         {
-            try
-            {
-                await _taxService.AddTaxRecord(request);
-                return Created();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-
-            }
+            await _taxService.AddTaxRecord(request);
+            return Created();
         }
     };
 }

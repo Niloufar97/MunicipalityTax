@@ -19,30 +19,15 @@ namespace MunicipalityTax.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllMunicipality()
         {
-            try
-            {
-                var municipaities = await _municipalityService.GetAllMunicipalitiesAsync();
-                return Ok(municipaities);
-            }
-            catch
-            {
-                return StatusCode(500 ,"An unexpected error occurred.");
-            }
-            
+            var municipaities = await _municipalityService.GetAllMunicipalitiesAsync();
+            return Ok(municipaities);
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddMunicipality([FromBody] AddMunicipalityRequestDto municipality) 
+        public async Task<IActionResult> AddMunicipality([FromBody] AddMunicipalityRequestDto municipality)
         {
-            try
-            {
-                await _municipalityService.AddMunicipalityAsync(municipality);
-                return Created();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _municipalityService.AddMunicipalityAsync(municipality);
+            return Created();
         }
     }
 }

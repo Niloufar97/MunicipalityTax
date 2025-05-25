@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using MunicipalityTax.Services;
 using MunicipalityTax.Repositories;
+using MunicipalityTax.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,8 +29,10 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
-
+//Automatically redirects HTTP requests to HTTPS.
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthorization();
 

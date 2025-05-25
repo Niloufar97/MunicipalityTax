@@ -1,4 +1,5 @@
 ﻿using MunicipalityTax.Dtos;
+using MunicipalityTax.Exceptions;
 using MunicipalityTax.Models;
 using MunicipalityTax.Repositories;
 
@@ -28,7 +29,7 @@ namespace MunicipalityTax.Services
             var taxes = await _taxRepository.AllTaxesWithInputs(municipality, date);
             if (!taxes.Any())
             {
-                throw new Exception("No tax records found for the specified municipality and date.");
+                throw new NotFoundException("No tax records found for the specified municipality and date.");
             }
 
             var taxWithHighPriority = taxes.OrderBy(t => t.endDate.DayNumber - t.startDate.DayNumber).First(); //shorter period has higher priority
@@ -42,11 +43,11 @@ namespace MunicipalityTax.Services
             // Check if the tax record exists
             if (await _taxRepository.TaxRecordExists(request))
             {
-                throw new Exception("Tax record already exists for the specified municipality and date range.");
+                throw new BadRequestException("Tax record already exists for the specified municipality and date range.");
             }
             if (!await ValidateInputs(request))
             {
-                throw new Exception("Inputs are incorrect!");
+                throw new BadRequestException("Inputs are incorrect!");
             }
             var newTaxRecord = new Tax
             {

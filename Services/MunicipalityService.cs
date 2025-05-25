@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MunicipalityTax.Data;
 using MunicipalityTax.Dtos;
+using MunicipalityTax.Exceptions;
 using MunicipalityTax.Models;
 
 namespace MunicipalityTax.Services
@@ -23,11 +24,11 @@ namespace MunicipalityTax.Services
         public async Task AddMunicipalityAsync(AddMunicipalityRequestDto request)
         {
             if (string.IsNullOrEmpty(request.MunicipalityName)) {
-                throw new Exception("Municipality name is required");
+                throw new BadRequestException("Municipality name is required");
             }
             if (await _context.Municipalities.AnyAsync(m => m.MunicipalityName == request.MunicipalityName))
             {
-                throw new Exception("Municipality already exists");
+                throw new BadRequestException("Municipality already exists");
             }
             var newMunicipality = new Municipality
             {
